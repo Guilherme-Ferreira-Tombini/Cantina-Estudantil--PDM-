@@ -25,7 +25,8 @@ export default function Login({ navigation }) {
       console.log(authData);
     }catch(error){
       Alert.alert("Erro", "Login inválido");
-      console.log(error);
+      console.log("ERRO COMPLETO:", error);
+      console.log("ERRO DATA:", error?.data);
     }
   }
 
