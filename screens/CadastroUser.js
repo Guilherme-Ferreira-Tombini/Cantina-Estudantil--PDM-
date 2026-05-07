@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import pb from '../services/pocketbase';
 
-export default function Login({ navigation }) {
+export default function CadastroUser({ navigation }) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
