@@ -2,8 +2,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import Login from "./screens/Login.js";
 import Home from "./screens/Home.js"
-import Cadastro from "./screens/CadastroUser.js"
+import CadastroUser from "./screens/CadastroUser.js"
 import AlterarUser from "./screens/AlterarUser.js"
+import CadastrarProduct from "./screens/CadastroProduct.js"
+
 
 const Stack = createStackNavigator();
 
@@ -30,7 +32,7 @@ export default function App() {
 
         <Stack.Screen
           name="Cadastro Usuário"
-          component={Cadastro}
+          component={CadastroUser}
           options={{title: "Cadastro Usuário"}}
         />
 
@@ -44,6 +46,12 @@ export default function App() {
           name="Home"
           component={Home}
           options={{title: "Home"}}
+        />
+
+        <Stack.Screen
+          name="CadastrarProduct"
+          component={CadastrarProduct}
+          options={{title: "Cadastrar Produto"}}
         />
 
       </Stack.Navigator>
