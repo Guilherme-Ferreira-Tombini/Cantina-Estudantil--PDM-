@@ -6,6 +6,7 @@ import CadastroUser from "./screens/CadastroUser.js"
 import AlterarUser from "./screens/AlterarUser.js"
 import CadastrarProduct from "./screens/CadastroProduct.js"
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
