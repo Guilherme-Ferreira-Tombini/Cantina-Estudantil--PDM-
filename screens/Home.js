@@ -5,10 +5,15 @@ import { useNavigation } from "@react-navigation/native";
 export default function Home({navigation}){
     return(
     <View style={styles.container}>
-        <Text>Home da aplicação</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("AlterarUser")}>
+        <TouchableOpacity style={styles.botomAlt} onPress={() => navigation.navigate("AlterarUser")}>
                 <Text>Alterar cadastro</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.botomCP} onPress={() => navigation.navigate("AlterarUser")}>
+                <Text>Cadastrar produto</Text>
+        </TouchableOpacity>
+        <View>
+          {/* AQUI AONDE APARECE OS PRODUTOS */}
+        </View>
     </View>
 
 )}
@@ -17,9 +22,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#228B22",
     color: "black"
   }, 
+  botomAlt:{
+    width: "100%",
+    backgroundColor: "#F6B68E",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  botomCP:{
+    width: "100%",
+    backgroundColor: "#B8FFCB",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 15,
+  }
 })
