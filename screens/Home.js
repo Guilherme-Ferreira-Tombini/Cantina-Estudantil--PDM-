@@ -8,7 +8,7 @@ export default function Home({navigation}){
         <TouchableOpacity style={styles.botomAlt} onPress={() => navigation.navigate("AlterarUser")}>
                 <Text>Alterar cadastro</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.botomCP} onPress={() => navigation.navigate("AlterarUser")}>
+        <TouchableOpacity style={styles.botomCP} onPress={() => navigation.navigate("CadastrarProduct")}>
                 <Text>Cadastrar produto</Text>
         </TouchableOpacity>
         <View>
