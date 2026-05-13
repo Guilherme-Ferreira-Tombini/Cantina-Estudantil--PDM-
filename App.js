@@ -5,6 +5,7 @@ import Home from "./screens/Home.js"
 import CadastroUser from "./screens/CadastroUser.js"
 import AlterarUser from "./screens/AlterarUser.js"
 import CadastrarProduct from "./screens/CadastroProduct.js"
+import RecuperaAcesso from "./screens/RecuperaAcesso.js"
 
 
 const Stack = createStackNavigator();
@@ -52,6 +53,12 @@ export default function App() {
           name="CadastrarProduct"
           component={CadastrarProduct}
           options={{title: "Cadastrar Produto"}}
+        />
+
+        <Stack.Screen
+          name="Recuperar Acesso"
+          component={RecuperaAcesso}
+          options={{title: "Recuperar acesso do usuário"}}
         />
 
       </Stack.Navigator>
