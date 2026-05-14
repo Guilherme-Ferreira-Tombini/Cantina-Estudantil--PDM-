@@ -1,6 +1,7 @@
 import { View, Text, Alert, TouchableOpacity, StyleSheet} from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
+import CardProdutosLogica from "../components/CardProdutosLogica";
 
 export default function Home({navigation}){
     return(
@@ -11,9 +12,10 @@ export default function Home({navigation}){
         <TouchableOpacity style={styles.botomCP} onPress={() => navigation.navigate("CadastrarProduct")}>
                 <Text>Cadastrar produto</Text>
         </TouchableOpacity>
-        <View>
-          {/* AQUI AONDE APARECE OS PRODUTOS */}
-        </View>
+        
+        <View style={styles.produtos}>
+                <CardProdutosLogica />
+      </View>
     </View>
 
 )}
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: "center",
+    alignItems: "stretch",
     backgroundColor: "#228B22",
     color: "black"
   }, 
