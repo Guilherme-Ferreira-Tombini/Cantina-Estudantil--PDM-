@@ -5,6 +5,7 @@ import Home from "./screens/Home.js"
 import CadastroUser from "./screens/CadastroUser.js"
 import AlterarUser from "./screens/AlterarUser.js"
 import CadastrarProduct from "./screens/CadastroProduct.js"
+import EditarProduct from "./screens/EditarProduct.js";
 
 
 const Stack = createStackNavigator();
@@ -52,6 +53,12 @@ export default function App() {
           name="CadastrarProduct"
           component={CadastrarProduct}
           options={{title: "Cadastrar Produto"}}
+        />
+
+        <Stack.Screen 
+          name="EditarProduct" 
+          component={EditarProduct} 
+          options={{title: "Editar Produto"}}
         />
 
       </Stack.Navigator>

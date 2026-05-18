@@ -6,6 +6,7 @@ import CardProdutosLogica from "../components/CardProdutosLogica";
 export default function Home({navigation}){
     return(
     <View style={styles.container}>
+
         <TouchableOpacity style={styles.botomAlt} onPress={() => navigation.navigate("AlterarUser")}>
                 <Text>Alterar cadastro</Text>
         </TouchableOpacity>
@@ -16,6 +17,7 @@ export default function Home({navigation}){
         <View style={styles.produtos}>
                 <CardProdutosLogica />
       </View>
+
     </View>
 
 )}

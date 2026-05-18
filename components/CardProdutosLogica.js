@@ -2,9 +2,16 @@ import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text } from "react-native";
 import pb from "../services/pocketbase";
 import CardProdutos from "./CardProdutos";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CardProdutosLogica() {
   const [produtos, setProdutos] = useState([]);
+
+  const navigation = useNavigation();
+
+  function handleEdit(product) { 
+    navigation.navigate("EditarProduct", {product});
+  }
 
   async function buscarProdutos() {
     try {
@@ -30,7 +37,10 @@ export default function CardProdutosLogica() {
       </Text>
     ) : (
       produtos.map((item) => (
-        <CardProdutos key={item.id} product={item} />
+        <CardProdutos key={item.id} 
+                      product={item} 
+                      onEdit={handleEdit}
+                      />
       ))
     )}
   </View>
