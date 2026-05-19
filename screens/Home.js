@@ -1,11 +1,13 @@
-import { View, Text, Alert, TouchableOpacity, StyleSheet} from "react-native";
+import { View, Text, Alert, TouchableOpacity, StyleSheet, ScrollView} from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
 import CardProdutosLogica from "../components/CardProdutosLogica";
 
 export default function Home({navigation}){
     return(
-    <View style={styles.container}>
+
+    <ScrollView contentContainerStyle={styles.container}>
+
         <TouchableOpacity style={styles.botomAlt} onPress={() => navigation.navigate("AlterarUser")}>
                 <Text>Alterar cadastro</Text>
         </TouchableOpacity>
@@ -15,9 +17,9 @@ export default function Home({navigation}){
         
         <View style={styles.produtos}>
                 <CardProdutosLogica />
-      </View>
-    </View>
+       </View>
 
+    </ScrollView>
 )}
 
 const styles = StyleSheet.create({
