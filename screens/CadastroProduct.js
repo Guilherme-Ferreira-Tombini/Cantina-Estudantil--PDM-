@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Switch } from "react-native";
-
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Switch, ScrollView} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import pb from "../services/pocketbase";
@@ -63,7 +62,7 @@ export default function CadastroProduct({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>Cadastrar Produto</Text>
 
       <TextInput
@@ -127,13 +126,13 @@ export default function CadastroProduct({ navigation }) {
       >
         <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     justifyContent: "center",
     backgroundColor: "#228B22",
