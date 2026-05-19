@@ -19,7 +19,7 @@ export default function Home({navigation}){
     }
   }
     return(
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <TouchableOpacity style={styles.botomS} onPress={handleLogout}>
                 <Text>Sair</Text>
         </TouchableOpacity>
@@ -39,7 +39,6 @@ export default function Home({navigation}){
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
     alignItems: "stretch",
     backgroundColor: "#228B22",
