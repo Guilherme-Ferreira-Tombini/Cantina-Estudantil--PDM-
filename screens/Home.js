@@ -1,4 +1,4 @@
-import { View, Text, Alert, TouchableOpacity, StyleSheet} from "react-native";
+import { View, Text, Alert, TouchableOpacity, StyleSheet, ScrollView} from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
 import CardProdutosLogica from "../components/CardProdutosLogica";
@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import pb from '../services/pocketbase';
 
 export default function Home({navigation}){
+
   async function handleLogout() {
     try {
       pb.authStore.clear();
@@ -17,8 +18,8 @@ export default function Home({navigation}){
       console.log(error);
     }
   }
-  return(
-    <View style={styles.container}>
+    return(
+    <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity style={styles.botomS} onPress={handleLogout}>
                 <Text>Sair</Text>
         </TouchableOpacity>
@@ -31,9 +32,9 @@ export default function Home({navigation}){
         
         <View style={styles.produtos}>
                 <CardProdutosLogica />
-      </View>
-    </View>
+       </View>
 
+    </ScrollView>
 )}
 
 const styles = StyleSheet.create({
