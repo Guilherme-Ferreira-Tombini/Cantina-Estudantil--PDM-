@@ -2,6 +2,8 @@ import { View, Text, Alert, TouchableOpacity, StyleSheet, ScrollView} from "reac
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
 import CardProdutosLogica from "../components/CardProdutosLogica";
+import * as SecureStore from 'expo-secure-store';
+import pb from '../services/pocketbase';
 
 export default function Home({navigation}){
 
@@ -47,6 +49,15 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#F6B68E",
     padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  botomS:{
+    width: "100%",
+    backgroundColor: "#e02222",
+    padding: 15,
+    color: "#ffffff",
     borderRadius: 8,
     alignItems: "center",
     marginBottom: 15,
