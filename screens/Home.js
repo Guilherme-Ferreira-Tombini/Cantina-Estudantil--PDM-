@@ -4,10 +4,23 @@ import { useNavigation } from "@react-navigation/native";
 import CardProdutosLogica from "../components/CardProdutosLogica";
 
 export default function Home({navigation}){
+
+  async function handleLogout() {
+    try {
+      pb.authStore.clear();
+      await SecureStore.deleteItemAsync("token");
+      await SecureStore.deleteItemAsync("user");
+      await SecureStore.deleteItemAsync("email");
+      navigation.replace("Login");
+    } catch (error) {
+      console.log(error);
+    }
+  }
     return(
-
     <ScrollView contentContainerStyle={styles.container}>
-
+        <TouchableOpacity style={styles.botomS} onPress={handleLogout}>
+                <Text>Sair</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.botomAlt} onPress={() => navigation.navigate("AlterarUser")}>
                 <Text>Alterar cadastro</Text>
         </TouchableOpacity>
