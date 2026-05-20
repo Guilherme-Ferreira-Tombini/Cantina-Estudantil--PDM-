@@ -5,6 +5,11 @@ import CardProdutos from "./CardProdutos";
 
 export default function CardProdutosLogica() {
   const [produtos, setProdutos] = useState([]);
+  const navigation = useNavigation();
+
+  function handleEdit(product) { 
+    navigation.navigate("EditarProduct", {product});
+  }
 
   async function buscarProdutos() {
     try {
@@ -30,9 +35,12 @@ export default function CardProdutosLogica() {
       </Text>
     ) : (
       produtos.map((item) => (
-        <CardProdutos key={item.id} product={item} />
+     <CardProdutos key={item.id} 
+                   product={item} 
+                   onEdit={handleEdit}/>
       ))
     )}
   </View>
 );
+
 }
