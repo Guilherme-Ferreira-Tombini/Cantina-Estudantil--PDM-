@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Switch} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, Switch} from "react-native";
+
 import * as ImagePicker from "expo-image-picker";
 import pb from "../services/pocketbase";
 
@@ -17,34 +18,40 @@ export default function EditarProduct({ route, navigation }) {
         if (product) {
             setNome(product.name || "");
             setIngredients(product.ingredients || "");
+
             setExpirationDate(
-            product.expiration_date
-            ? product.expiration_date.substring(0, 10)
-            : ""
-        );
+                product.expiration_date
+                    ? product.expiration_date.substring(0, 10)
+                    : ""
+            );
+
             setStatus(!!product.status);
+
             setValue(String(product.value ?? ""));
             setQuantity(String(product.quantity ?? ""));
         }
     }, [product]);
 
     async function pickImage() {
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
         });
 
-    if (!result.canceled) {
-        const asset = result.assets[0];
-        setImage({
-        uri: asset.uri,
-        });
+        if (!result.canceled) {
+            const asset = result.assets[0];
+            setImage({
+                uri: asset.uri,
+                name: "photo.jpg",
+                type: "image/jpeg",
+            });
         }
     }
 
     async function handleUpdateProduct() {
         try {
-            console.log("clicou no salvar");
+            console.log("CLICOU EM SALVAR");
 
             if (
                 !nome.trim() ||
@@ -53,181 +60,223 @@ export default function EditarProduct({ route, navigation }) {
                 value === "" ||
                 quantity === ""
             ) {
-            Alert.alert("Erro", "Preencha todos os campos!");
-            return;
+
+                Alert.alert("Erro", "Preencha todos os campos!");
+                return;
             }
 
-        const form = new FormData();
+            const form = new FormData();
+
             form.append("name", nome.trim());
             form.append("ingredients", ingredients.trim());
             form.append("expiration_date", expirationDate.trim());
+
             form.append("status", status ? "true" : "false");
-            form.append("value", String(Number(value)));
-            form.append("quantity", String(Number(quantity)));
 
-        if (image?.uri) {
-            const response = await fetch(image.uri);
-            const blob = await response.blob();
-            form.append("image", blob, "photo.jpg");
-        }
+            form.append("value", value.toString());
+            form.append("quantity", quantity.toString());
 
-        console.log("ENVIANDO UPDATE...");
+            if (image?.uri) {
 
-        await pb.collection("products").update(product.id, form);
+                form.append("image", {
+                    uri: image.uri,
+                    name: image.name,
+                    type: image.type,
+                });
+            }
+
+            console.log("ENVIANDO UPDATE...");
+
+            await pb.collection("products").update(product.id, form);
 
             Alert.alert(
                 "Sucesso",
-                status ? "Produto disponível" : "Produto indisponível"
+                "Produto atualizado!"
             );
 
             navigation.navigate("Home");
-            } catch (error) {
-            console.log("ERRO COMPLETO:", JSON.stringify(error.response, null, 2));
-            Alert.alert("Erro", "Falha ao atualizar produto");
+
+        } catch (error) {
+
+            console.log("ERRO COMPLETO:");
+            console.log(JSON.stringify(error, null, 2));
+
+            if (error?.response) {
+                console.log("RESPONSE:");
+                console.log(JSON.stringify(error.response, null, 2));
             }
+
+            Alert.alert(
+                "Erro",
+                "Falha ao atualizar produto"
+            );
+        }
     }
 
-return (
-    <View style={styles.container}>
-        <Text style={styles.titulo}>Editar Produto</Text>
+    return (
+        <View style={styles.container}>
 
-        <TextInput
-            style={styles.input}
-            value={nome}
-            onChangeText={setNome}
-            placeholder="Nome"
-        />
-
-        <TextInput
-            style={styles.input}
-            value={ingredients}
-            onChangeText={setIngredients}
-            placeholder="Ingredientes"
-        />
-
-        <TextInput
-            style={styles.input}
-            value={expirationDate}
-            onChangeText={setExpirationDate}
-            placeholder="YYYY-MM-DD"
-        />
-
-        <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={value}
-            onChangeText={setValue}
-            placeholder="Valor" 
-        />
-
-        <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={quantity}
-            onChangeText={setQuantity}
-            placeholder="Quantidade"    
-        />
-
-        <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>
-            {status ? "Disponível" : "Indisponível"}
+            <Text style={styles.titulo}>
+                Editar Produto
             </Text>
-            <Switch value={status} onValueChange={setStatus} />
+
+            <TextInput
+                style={styles.input}
+                value={nome}
+                onChangeText={setNome}
+                placeholder="Nome"
+            />
+
+            <TextInput
+                style={styles.input}
+                value={ingredients}
+                onChangeText={setIngredients}
+                placeholder="Ingredientes"
+            />
+
+            <TextInput
+                style={styles.input}
+                value={expirationDate}
+                onChangeText={setExpirationDate}
+                placeholder="YYYY-MM-DD"
+            />
+
+            <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                value={value}
+                onChangeText={setValue}
+                placeholder="Valor"
+            />
+
+            <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                value={quantity}
+                onChangeText={setQuantity}
+                placeholder="Quantidade"
+            />
+
+            <View style={styles.statusContainer}>
+
+                <Text style={styles.statusText}>
+                    {status ? "Disponível" : "Indisponível"}
+                </Text>
+
+                <Switch
+                    value={status}
+                    onValueChange={setStatus}
+                />
+
+            </View>
+
+            <TouchableOpacity
+                style={styles.imageButton}
+                onPress={pickImage}
+            >
+                <Text style={styles.botaoTexto}>
+                    Alterar Imagem
+                </Text>
+            </TouchableOpacity>
+
+            {image ? (
+
+                <Image
+                    source={{ uri: image.uri }}
+                    style={styles.image}
+                />
+
+            ) : product.image ? (
+
+                <Image
+                    source={{
+                        uri: pb.files.getUrl(product, product.image) + "?t=" +
+                            new Date().getTime(),
+                    }}
+                    style={styles.image}
+                />
+
+            ) : null}
+
+            <TouchableOpacity
+                style={styles.botao}
+                onPress={handleUpdateProduct}
+            >
+                <Text style={styles.botaoTexto}>
+                    Salvar Alterações
+                </Text>
+            </TouchableOpacity>
+
         </View>
-
-        <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
-            <Text style={styles.botaoTexto}>Alterar Imagem</Text>
-        </TouchableOpacity>
-
-        {image ? (
-            <Image source={{ uri: image.uri }} style={styles.image} />
-            ) : product.image ? 
-        (
-            <Image
-                source={{
-                uri:
-                pb.files.getURL(product, product.image) +
-                "?t=" +
-                new Date().getTime(),
-            }}
-            style={styles.image}/>
-        ) : null}
-
-        <TouchableOpacity style={styles.botao} onPress={handleUpdateProduct}>
-            <Text style={styles.botaoTexto}>Salvar Alterações</Text>
-        </TouchableOpacity>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-    backgroundColor: "#228B22",
-},
+    container: {
+        flex: 1,
+        padding: 20,
+        justifyContent: "center",
+        backgroundColor: "#228B22",
+    },
 
-titulo: {
-    fontSize: 24,
-    marginBottom: 30,
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-},
+    titulo: {
+        fontSize: 24,
+        marginBottom: 30,
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
 
-input: {
-    width: "100%",
-    backgroundColor: "#fff",
-    padding: 12,
-    marginBottom: 15,
-    borderRadius: 8,
-},
+    input: {
+        width: "100%",
+        backgroundColor: "#fff",
+        padding: 12,
+        marginBottom: 15,
+        borderRadius: 8,
+    },
 
-botao: {
-    width: "100%",
-    backgroundColor: "#f3772a",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-},
+    botao: {
+        width: "100%",
+        backgroundColor: "#f3772a",
+        padding: 15,
+        borderRadius: 8,
+        alignItems: "center",
+        marginTop: 20,
+    },
 
-imageButton: {
-    width: "100%",
-    backgroundColor: "#444",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-},
+    imageButton: {
+        width: "100%",
+        backgroundColor: "#444",
+        padding: 15,
+        borderRadius: 8,
+        alignItems: "center",
+        marginTop: 10,
+    },
 
-botaoTexto: {
-    color: "#fff",
-    fontWeight: "bold",
-},
+    botaoTexto: {
+        color: "#fff",
+        fontWeight: "bold",
+    },
 
-image: {
-    width: 80,
-    height: 80,
-    borderRadius: 10,
-    alignSelf: "center",
-    marginTop: 10,
-},
+    image: {
+        width: 80,
+        height: 80,
+        borderRadius: 10,
+        alignSelf: "center",
+        marginTop: 10,
+    },
 
-statusContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 8,
-},
+    statusContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+        backgroundColor: "#fff",
+        padding: 12,
+        borderRadius: 8,
+    },
 
-statusText: {
-    fontSize: 16,
-  
-},
-
+    statusText: {
+        fontSize: 16,
+    },
 });

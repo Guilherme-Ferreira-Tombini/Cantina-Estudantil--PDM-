@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text } from "react-native";
 import pb from "../services/pocketbase";
 import CardProdutos from "./CardProdutos";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CardProdutosLogica() {
   const [produtos, setProdutos] = useState([]);
