@@ -13,80 +13,83 @@ export default function EditarProduct({ route, navigation }) {
     const [value, setValue] = useState("");
     const [quantity, setQuantity] = useState("");
 
-useEffect(() => {
-    if (product) {
-        setNome(product.name || "");
-        setIngredients(product.ingredients || "");
-        setExpirationDate(
-        product.expiration_date ? product.expiration_date.substring(0, 10) : ""
-      );
-        setStatus(!!product.status);
-        setValue(String(product.value ?? ""));
-        setQuantity(String(product.quantity ?? ""));
-    }
-}, [product]);
+    useEffect(() => {
+        if (product) {
+            setNome(product.name || "");
+            setIngredients(product.ingredients || "");
+            setExpirationDate(
+            product.expiration_date
+            ? product.expiration_date.substring(0, 10)
+            : ""
+        );
+            setStatus(!!product.status);
+            setValue(String(product.value ?? ""));
+            setQuantity(String(product.quantity ?? ""));
+        }
+    }, [product]);
 
-async function pickImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        quality: 1,
-});
-
-if (!result.canceled) {
-        setImage(result.assets[0]);
-    }
-}
-
-async function handleUpdateProduct() {
-    try {
-        console.log("clicou no salvar");
-    if (
-        !nome.trim() ||
-        !ingredients.trim() ||
-        !expirationDate.trim() ||
-        value === "" ||
-        quantity === ""
-      ) 
-    {Alert.alert("Erro", "Preencha todos os campos!");
-    return;
-    }
-
-    const form = new FormData();
-
-    form.append("name", nome.trim());
-    form.append("ingredients", ingredients.trim());
-    form.append("expiration_date", expirationDate.trim());
-    form.append("status", status); 
-    form.append("value", String(Number(value)));
-    form.append("quantity", String(Number(quantity)));
-
-    if (image?.uri) {
-        form.append("image", {
-          uri: image.uri,
-          name: image.fileName || "photo.jpg",
-          type: image.mimeType || "image/jpeg",
+    async function pickImage() {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
         });
+
+    if (!result.canceled) {
+        const asset = result.assets[0];
+        setImage({
+        uri: asset.uri,
+        });
+        }
     }
-      
-    console.log("ENVIANDO UPDATE...");
 
-    await pb.collection("products").update(product.id, form);
+    async function handleUpdateProduct() {
+        try {
+            console.log("clicou no salvar");
 
-    Alert.alert(
-        "Sucesso", status ? "Produto disponível" : "Produto indisponível"
-    );
+            if (
+                !nome.trim() ||
+                !ingredients.trim() ||
+                !expirationDate.trim() ||
+                value === "" ||
+                quantity === ""
+            ) {
+            Alert.alert("Erro", "Preencha todos os campos!");
+            return;
+            }
 
-    navigation.navigate("Home");
-    } catch (error) {
-      console.log("ERRO COMPLETO:", JSON.stringify(error.response, null, 2));
-      Alert.alert("Erro", "Falha ao atualizar produto");
+        const form = new FormData();
+            form.append("name", nome.trim());
+            form.append("ingredients", ingredients.trim());
+            form.append("expiration_date", expirationDate.trim());
+            form.append("status", status ? "true" : "false");
+            form.append("value", String(Number(value)));
+            form.append("quantity", String(Number(quantity)));
+
+        if (image?.uri) {
+            const response = await fetch(image.uri);
+            const blob = await response.blob();
+            form.append("image", blob, "photo.jpg");
+        }
+
+        console.log("ENVIANDO UPDATE...");
+
+        await pb.collection("products").update(product.id, form);
+
+            Alert.alert(
+                "Sucesso",
+                status ? "Produto disponível" : "Produto indisponível"
+            );
+
+            navigation.navigate("Home");
+            } catch (error) {
+            console.log("ERRO COMPLETO:", JSON.stringify(error.response, null, 2));
+            Alert.alert("Erro", "Falha ao atualizar produto");
+            }
     }
-}
 
 return (
     <View style={styles.container}>
-
-    <Text style={styles.titulo}>Editar Produto</Text>
+        <Text style={styles.titulo}>Editar Produto</Text>
 
         <TextInput
             style={styles.input}
@@ -114,7 +117,7 @@ return (
             keyboardType="numeric"
             value={value}
             onChangeText={setValue}
-            placeholder="Valor"
+            placeholder="Valor" 
         />
 
         <TextInput
@@ -122,14 +125,14 @@ return (
             keyboardType="numeric"
             value={quantity}
             onChangeText={setQuantity}
-            placeholder="Quantidade"
+            placeholder="Quantidade"    
         />
 
         <View style={styles.statusContainer}>
             <Text style={styles.statusText}>
             {status ? "Disponível" : "Indisponível"}
             </Text>
-            <Switch value={status} onValueChange={setStatus}/>
+            <Switch value={status} onValueChange={setStatus} />
         </View>
 
         <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
@@ -137,12 +140,16 @@ return (
         </TouchableOpacity>
 
         {image ? (
-            <Image 
-            source={{ uri: image.uri }} 
-            style={styles.image}/>
-        ) : product.image ? (
-            <Image 
-            source={{ uri: pb.files.getURL(product, product.image) }} 
+            <Image source={{ uri: image.uri }} style={styles.image} />
+            ) : product.image ? 
+        (
+            <Image
+                source={{
+                uri:
+                pb.files.getURL(product, product.image) +
+                "?t=" +
+                new Date().getTime(),
+            }}
             style={styles.image}/>
         ) : null}
 
@@ -154,14 +161,14 @@ return (
 }
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     padding: 20,
     justifyContent: "center",
     backgroundColor: "#228B22",
 },
 
-  titulo: {
+titulo: {
     fontSize: 24,
     marginBottom: 30,
     color: "white",
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
 },
 
-  input: {
+input: {
     width: "100%",
     backgroundColor: "#fff",
     padding: 12,
@@ -177,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
 },
 
-  botao: {
+botao: {
     width: "100%",
     backgroundColor: "#f3772a",
     padding: 15,
@@ -186,7 +193,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
 },
 
-  imageButton: {
+imageButton: {
     width: "100%",
     backgroundColor: "#444",
     padding: 15,
@@ -195,12 +202,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
 },
 
-  botaoTexto: {
+botaoTexto: {
     color: "#fff",
     fontWeight: "bold",
 },
 
-  image: {
+image: {
     width: 80,
     height: 80,
     borderRadius: 10,
@@ -208,7 +215,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
 },
 
-  statusContainer: {
+statusContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -218,7 +225,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
 },
 
-  statusText: {
+statusText: {
     fontSize: 16,
-}
+  
+},
+
 });
