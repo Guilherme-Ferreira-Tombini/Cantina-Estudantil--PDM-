@@ -1,20 +1,26 @@
+import React, { useContext } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import {NavigationContainer} from "@react-navigation/native";
-import Login from "./screens/Login.js";
-import Home from "./screens/Home.js"
-import CadastroUser from "./screens/CadastroUser.js"
-import AlterarUser from "./screens/AlterarUser.js"
-import CadastrarProduct from "./screens/CadastroProduct.js"
-import RecuperaAcesso from "./screens/RecuperaAcesso.js"
-import EditarProduct from "./screens/EditarProduct.js"
+import { AuthProvider, AuthContext } from "./contexts/AuthContext";
+import Login from "./screens/Login";
+import Home from "./screens/Home";
+import CadastroUser from "./screens/CadastroUser";
+import AlterarUser from "./screens/AlterarUser";
+import CadastrarProduct from "./screens/CadastroProduct";
+import RecuperaAcesso from "./screens/RecuperaAcesso";
+import EditarProduct from "./screens/EditarProduct";
 
 const Stack = createStackNavigator();
 
-export default function App() {
+function Routes() {
+  const { signed, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return null;
+  }
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator 
-      id={undefined} 
+    <Stack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: "#f77f1c",
@@ -23,51 +29,70 @@ export default function App() {
         headerTintColor: "#fff",
         headerTitleStyle: {
           fontWeight: "bold",
-        }
-      }}>
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{title: "Login"}}
-        />
+        },
+      }}
+    >
+      {!signed ? (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ title: "Login" }}
+          />
 
-        <Stack.Screen
-          name="Cadastro Usuário"
-          component={CadastroUser}
-          options={{title: "Cadastro Usuário"}}
-        />
+          <Stack.Screen
+            name="Cadastro Usuário"
+            component={CadastroUser}
+            options={{ title: "Cadastro Usuário" }}
+          />
 
-        <Stack.Screen
-          name="AlterarUser"
-          component={AlterarUser}
-          options={{title: "Alterar dados de cadastro"}}
-        />
+          <Stack.Screen
+            name="Recuperar Acesso"
+            component={RecuperaAcesso}
+            options={{
+              title: "Recuperar acesso do usuário",
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{ title: "Home" }}
+          />
 
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{title: "Home"}}
-        />
+          <Stack.Screen
+            name="AlterarUser"
+            component={AlterarUser}
+            options={{
+              title: "Alterar dados de cadastro",
+            }}
+          />
 
-        <Stack.Screen
-          name="CadastrarProduct"
-          component={CadastrarProduct}
-          options={{title: "Cadastrar Produto"}}
-        />
+          <Stack.Screen
+            name="CadastrarProduct"
+            component={CadastrarProduct}
+            options={{ title: "Cadastrar Produto" }}
+          />
 
-        <Stack.Screen
-          name="Recuperar Acesso"
-          component={RecuperaAcesso}
-          options={{title: "Recuperar acesso do usuário"}}
-        />
+          <Stack.Screen
+            name="EditarProduct"
+            component={EditarProduct}
+            options={{ title: "Editar Produtos" }}
+          />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+}
 
-        <Stack.Screen
-          name="EditarProduct"
-          component={EditarProduct}
-          options={{title: "Editar Produtos"}}
-        />
-
-      </Stack.Navigator>
-    </NavigationContainer>
+export default function App() {
+  return(
+    <AuthProvider>
+      <NavigationContainer>
+        <Routes />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
