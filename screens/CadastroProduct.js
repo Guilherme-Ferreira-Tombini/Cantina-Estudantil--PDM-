@@ -13,16 +13,73 @@ export default function CadastroProduct({ navigation }) {
   const [value, setValue] = useState(0);
   const [quantity, setQuantity] = useState(0);
 
-  async function pickImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      quality: 1,
-    });
+ async function pickImage() {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (!result.canceled) {
-      setImage(result.assets[0]);
+        if (status !== 'granted') {
+            alert('Permissão para acessar a galeria negada!');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const asset = result.assets[0];
+
+            setImage({
+                uri: asset.uri,
+                name: 'photo.jpg',
+                type: 'image/jpeg',
+            });
+        }
     }
-  }
+
+    async function takePhoto() {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (status !== 'granted') {
+            alert('Permissão para usar a câmera negada!');
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const asset = result.assets[0];
+
+            setImage({
+                uri: asset.uri,
+                name: 'photo.jpg',
+                type: 'image/jpeg',
+            });
+        }
+    }
+    
+    function selectImage() {
+        Alert.alert(
+            'Selecionar imagem',
+            'Escolha uma opção',
+            [
+                {
+                    text: 'Câmera',
+                    onPress: takePhoto,
+                },
+                {
+                    text: 'Galeria',
+                    onPress: pickImage,
+                },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+            ]
+        );
+    }
 
   async function handleCreateProduct() {
     if (!nome || !ingredients || !expirationDate || value <= 0 || quantity <= 0) {
@@ -32,7 +89,6 @@ export default function CadastroProduct({ navigation }) {
 
     try {
       const formData = new FormData();
-
       formData.append("name", nome);
       formData.append("ingredients", ingredients);
       formData.append("expiration_date", expirationDate);
@@ -109,7 +165,7 @@ export default function CadastroProduct({ navigation }) {
         />
       </View>
 
-      <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
+      <TouchableOpacity style={styles.imageButton} onPress={selectImage}>
         <Text style={styles.botaoTexto}>Selecionar Imagem</Text>
       </TouchableOpacity>
 
