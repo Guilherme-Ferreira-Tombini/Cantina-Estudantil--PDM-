@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   botomAlt: {
     width: "100%",
-    backgroundColor: "#F6B68E",
+    backgroundColor: "#e98a50",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   botomCP: {
     width: "100%",
-    backgroundColor: "#B8FFCB",
+    backgroundColor: "#0ddf45",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
