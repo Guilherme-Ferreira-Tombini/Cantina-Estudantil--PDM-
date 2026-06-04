@@ -33,20 +33,72 @@ export default function EditarProduct({ route, navigation }) {
     }, [product]);
 
     async function pickImage() {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (status !== 'granted') {
+            alert('Permissão para acessar a galeria negada!');
+            return;
+        }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ['images'],
             quality: 1,
         });
 
         if (!result.canceled) {
             const asset = result.assets[0];
+
             setImage({
                 uri: asset.uri,
-                name: "photo.jpg",
-                type: "image/jpeg",
+                name: 'photo.jpg',
+                type: 'image/jpeg',
             });
         }
+    }
+
+    async function takePhoto() {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (status !== 'granted') {
+            alert('Permissão para usar a câmera negada!');
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const asset = result.assets[0];
+
+            setImage({
+                uri: asset.uri,
+                name: 'photo.jpg',
+                type: 'image/jpeg',
+            });
+        }
+    }
+    
+
+    function selectImage() {
+        Alert.alert(
+            'Selecionar imagem',
+            'Escolha uma opção',
+            [
+                {
+                    text: 'Câmera',
+                    onPress: takePhoto,
+                },
+                {
+                    text: 'Galeria',
+                    onPress: pickImage,
+                },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+            ]
+        );
     }
 
     async function handleUpdateProduct() {
@@ -172,7 +224,7 @@ export default function EditarProduct({ route, navigation }) {
 
             <TouchableOpacity
                 style={styles.imageButton}
-                onPress={pickImage}
+                onPress={selectImage}
             >
                 <Text style={styles.botaoTexto}>
                     Alterar Imagem
