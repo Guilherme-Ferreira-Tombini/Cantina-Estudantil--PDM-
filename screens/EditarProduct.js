@@ -123,7 +123,7 @@ export default function EditarProduct({ route, navigation }) {
             form.append("ingredients", ingredients.trim());
             form.append("expiration_date", expirationDate.trim());
 
-            form.append("status", status ? "true" : "false");
+            form.append("status", status);
 
             form.append("value", value.toString());
             form.append("quantity", quantity.toString());
@@ -136,7 +136,7 @@ export default function EditarProduct({ route, navigation }) {
                     type: image.type,
                 });
             }
-
+            
             console.log("ENVIANDO UPDATE...");
 
             await pb.collection("products").update(product.id, form);
